@@ -1,3 +1,3 @@
-window.APP_CONFIG = window.APP_CONFIG || {
-  apiBaseUrl: '',
+window.APP_CONFIG = {
+  apiBaseUrl: 'https://api.example.com',
 };
