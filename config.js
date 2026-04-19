@@ -1,3 +1,3 @@
 window.APP_CONFIG = {
-  apiBaseUrl: 'https://api.example.com',
+  apiBaseUrl: 'https://basement-alias-subjective-coordinate.trycloudflare.com',
 };
