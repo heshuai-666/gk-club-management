@@ -1,3 +1,3 @@
 window.APP_CONFIG = {
-  apiBaseUrl: 'https://basement-alias-subjective-coordinate.trycloudflare.com',
+  apiBaseUrl: 'https://purple-tables-travel.loca.lt',
 };
