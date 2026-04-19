@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>工控社团管理系统</title>
+    <link rel="stylesheet" href="/styles.css?v=20260420-2" />
+  </head>
+  <body>
+    <div id="login-screen" class="screen"></div>
+
+    <div id="app-screen" class="screen hidden">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Club Workspace</p>
+          <h1>工控社团管理系统</h1>
+          <p id="user-summary" class="muted"></p>
+        </div>
+        <div class="topbar-actions">
+          <button id="refresh-all" class="ghost-btn" type="button">刷新</button>
+          <button id="logout-btn" class="ghost-btn" type="button">退出登录</button>
+        </div>
+      </header>
+
+      <section class="stats-grid" id="stats-grid"></section>
+
+      <nav class="tabs" id="tabs">
+        <button class="tab active" data-tab="leadership" type="button">核心成员公示</button>
+        <button class="tab" data-tab="dashboard" type="button">总览</button>
+        <button class="tab" data-tab="tasks" type="button">任务</button>
+        <button class="tab" data-tab="scores" type="button">学分</button>
+        <button class="tab" data-tab="courses" type="button">课表</button>
+        <button class="tab" data-tab="duties" type="button">值班</button>
+        <button class="tab" data-tab="admin" type="button">后台</button>
+      </nav>
+
+      <main class="panels">
+        <section class="panel active" data-panel="leadership">
+          <div class="card-grid two">
+            <article class="card">
+              <h2>核心成员公示</h2>
+              <p class="muted">仅公示会长、副会长及各部门部长、副部长，普通成员不展示。</p>
+              <div id="leadership-public-list" class="stack"></div>
+            </article>
+            <article class="card" id="leadership-admin-card">
+              <h2>公示信息设置</h2>
+              <p class="muted">由总管理员后台直接填写公示身份和姓名。</p>
+              <div id="leadership-admin-list" class="stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" data-panel="dashboard">
+          <article class="card">
+            <h2>最近提醒</h2>
+            <div id="notifications-list" class="stack"></div>
+          </article>
+        </section>
+
+        <section class="panel" data-panel="tasks">
+          <div class="card-grid two">
+            <article class="card" id="task-form-card">
+              <h2>发布任务</h2>
+              <form id="task-form" class="stack">
+                <input name="title" placeholder="任务标题" required />
+                <textarea name="content" placeholder="任务内容" rows="5" required></textarea>
+                <input id="task-deadline" name="deadline" type="datetime-local" required />
+                <input name="credit" type="number" min="0" step="0.5" placeholder="对应学分" required />
+                <select name="targetDepartment" id="task-department"></select>
+                <button type="submit" class="primary-btn">发布任务</button>
+              </form>
+            </article>
+            <article class="card">
+              <h2>任务列表</h2>
+              <div id="tasks-list" class="stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" data-panel="scores">
+          <div class="card-grid two">
+            <article class="card">
+              <h2>我的累计学分</h2>
+              <div id="leaderboard-list" class="stack"></div>
+            </article>
+            <article class="card">
+              <h2>学分记录</h2>
+              <div id="score-records-list" class="stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" data-panel="courses">
+          <div class="card-grid two">
+            <article class="card">
+              <h2>录入课表</h2>
+              <form id="course-form" class="stack">
+                <input name="courseDate" type="date" required />
+                <select name="slotIndex" id="course-slot"></select>
+                <input name="courseName" placeholder="课程名称，可不填" />
+                <button type="submit" class="primary-btn">保存课表</button>
+              </form>
+              <div id="my-courses-list" class="stack"></div>
+            </article>
+            <article class="card">
+              <h2>全员课表</h2>
+              <div id="course-board-list" class="stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" data-panel="duties">
+          <div class="card-grid two">
+            <article class="card" id="duty-form-card">
+              <h2>智能排班</h2>
+              <form id="duty-form" class="stack">
+                <input name="title" placeholder="值班标题" required />
+                <input name="dutyDate" type="date" required />
+                <select name="slotIndex" id="duty-slot"></select>
+                <input name="count" type="number" min="1" value="1" required />
+                <select name="department" id="duty-department"></select>
+                <textarea name="notes" placeholder="备注" rows="4"></textarea>
+                <button type="submit" class="primary-btn">一键生成值班表</button>
+              </form>
+            </article>
+            <article class="card">
+              <h2>值班记录</h2>
+              <div id="duties-list" class="stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" data-panel="admin">
+          <div class="card-grid two">
+            <article class="card">
+              <div class="section-head">
+                <div>
+                  <h2>待审核注册</h2>
+                  <p class="muted">注册申请必须审核通过后才能登录。</p>
+                </div>
+              </div>
+              <div id="pending-users-list" class="stack"></div>
+            </article>
+            <article class="card">
+              <div class="section-head">
+                <div>
+                  <h2>密码重置申请</h2>
+                  <p class="muted">忘记密码后由管理员审核新密码申请。</p>
+                </div>
+              </div>
+              <div id="reset-requests-list" class="stack"></div>
+            </article>
+          </div>
+
+          <div class="card-grid two">
+            <article class="card">
+              <div class="section-head">
+                <div>
+                  <h2>成员管理</h2>
+                  <p class="muted">支持按学号或姓名搜索，并可设置权限、踢出退部成员。</p>
+                </div>
+                <input id="member-search" class="compact-input" placeholder="搜索学号或姓名" />
+              </div>
+              <div id="users-admin-list" class="stack"></div>
+            </article>
+            <article class="card">
+              <h2>审计日志</h2>
+              <div id="audit-logs-list" class="stack"></div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="review-modal" class="modal hidden" aria-hidden="true">
+      <div class="modal-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">审核处理</p>
+            <h2 id="review-title">审核详情</h2>
+          </div>
+          <button id="close-review-modal" class="ghost-btn" type="button">关闭</button>
+        </div>
+        <div id="review-body" class="stack"></div>
+        <div class="inline-actions">
+          <button id="review-approve-btn" class="secondary-btn" type="button">通过</button>
+          <button id="review-reject-btn" class="danger-btn" type="button">驳回</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+    <script src="/config.js?v=20260420-1"></script>
+    <script src="/app.js?v=20260420-2"></script>
+  </body>
+</html>
